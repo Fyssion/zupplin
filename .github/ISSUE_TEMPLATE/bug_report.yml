@@ -1,0 +1,62 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: [unconfirmed bug]
+assignees:
+  - octocat
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report.
+
+        Please note that this form is for bug reports only.
+  - type: textarea
+    id: description
+    attributes:
+      label: Summary
+      description: Please summarize the issue.
+    validations:
+      required: true
+      - type: textarea
+    attributes:
+      label: Reproduction Steps
+      description: >
+        What you did to make it happen.
+      placeholder: |
+        1. Go to this
+        2. Click on this
+        3. Error happens
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: Browser
+      description: >
+        If applicable, what browser(s) are you seeing the issue on?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots/Videos
+      description: If applicable, please provide any relavent screenshots or videos that help explain your issue.
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: >
+        Let's make sure you've properly done due dilligence when reporting this issue!
+      options:
+        - label: I have searched the open issues for duplicates.
+          required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: If there is anything else to say, please do so here.

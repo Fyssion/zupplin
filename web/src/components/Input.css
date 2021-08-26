@@ -1,0 +1,26 @@
+.form-group {
+  float: left;
+}
+
+.form-group > input, .form-group > label {
+  display: block;
+}
+
+.form-group > input {
+  background-color: rgba(255, 255, 255, 0.075);
+  color: white;
+  padding: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-radius: 3px;
+  border: 1px solid rgba(3, 3, 3, 0.616);
+}
+
+.form-group >  input:focus {
+  border: 1px solid rgb(138, 10, 202);
+}
+
+.form-group > label {
+  color: rgba(255, 255, 255, 0.644);
+  font-size: 0.9rem;
+}

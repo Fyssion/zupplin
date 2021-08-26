@@ -1,0 +1,38 @@
+name: "server: pyright"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "server/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "server/**"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v2.0.0
+      - name: Install dependencies
+        run: |
+          poetry config virtualenvs.create false
+          poetry install
+      - name: Test with pyright
+        uses: jakebailey/pyright-action@v1
+        with:
+          working-directory: ./server
