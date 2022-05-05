@@ -1,12 +1,17 @@
+from __future__ import annotations
+
 import re
-from typing import Any, Union
+from typing import TYPE_CHECKING, Any, Union
 
 import orjson
 import tornado.web
 
 from .database import Database
 
-err = tuple[int, str]
+if TYPE_CHECKING:
+    from app import Application
+
+    err = tuple[int, str]
 
 
 class HTTPError:
@@ -16,6 +21,7 @@ class HTTPError:
 
 
 class RequestHandler(tornado.web.RequestHandler):
+    application: Application
     user_id: str
     body: dict[str, Any]
 

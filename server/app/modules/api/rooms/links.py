@@ -1,7 +1,13 @@
+from __future__ import annotations
+
 import datetime
+from typing import TYPE_CHECKING
 
 from app.utils.handler import RequestHandler  # , HTTPError
 from app.utils.spec import spec
+
+if TYPE_CHECKING:
+    from app import Application
 
 
 class Links(RequestHandler):
@@ -12,7 +18,7 @@ class Links(RequestHandler):
     async def post(self, room_id: str):
         async with self.database.acquire() as conn:
             id = None
-            already_exists = None
+            already_exists: int | None = None
 
             # I'm unsure how I should handle potential duplicate links.
             # This is an easy solution I thought of, but it's probably not the best.
@@ -23,7 +29,7 @@ class Links(RequestHandler):
                 if not already_exists:
                     break
 
-            if already_exists:
+            if already_exists or not id:
                 return self.send_error(500)  # hopefully this will never happen
 
             if self.body['max_age']:
@@ -56,5 +62,5 @@ class Links(RequestHandler):
         self.finish(link)
 
 
-def setup(app):
+def setup(app: Application):
     return (f'/api/v{app.version}/rooms/(.+)/links', Links)

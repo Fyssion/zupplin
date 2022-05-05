@@ -1,8 +1,16 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app import Application
+
+
 from tornado.web import RequestHandler
 
 
 class BaseHandler(RequestHandler):
-    ...
+    application: Application
 
 
 class LandingHandler(BaseHandler):
@@ -15,7 +23,7 @@ class AboutHandler(BaseHandler):
         self.render("about.html")
 
 
-def setup(app):
+def setup(app: Application):
     return [
         (r"/", LandingHandler),
         (r"/about", AboutHandler)

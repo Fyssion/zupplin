@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import base64
 import secrets
 import string
@@ -13,7 +15,7 @@ class Tokens:
         self.link_length = link_length
 
         self.signer = itsdangerous.TimestampSigner(secret)
-        self.incrementer = 0
+        self.incrementer: int = 0
 
     def create_id(self) -> str:
         self.incrementer += 1
@@ -29,18 +31,18 @@ class Tokens:
         token = self.signer.sign(b64_token)
         return token.decode()
 
-    def validate_token(self, token: str, *, max_age: int = None) -> str:
+    def validate_token(self, token: str, *, max_age: int | None = None) -> str:
         encoded_token = token.encode()
         result = self.signer.unsign(encoded_token, max_age=max_age)
 
         if isinstance(result, tuple):
-            id = result[0]
+            id = bytes(result[0])
         else:
             id = result
 
         return base64.b64decode(id.decode()).decode()
 
-    AVAILABLE_CHARS = string.ascii_letters + string.digits
+    AVAILABLE_CHARS: str = string.ascii_letters + string.digits
 
-    def create_link_id(self):
+    def create_link_id(self) -> str:
         return ''.join(secrets.choice(self.AVAILABLE_CHARS) for i in range(self.link_length))

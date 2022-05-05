@@ -1,11 +1,17 @@
+from __future__ import annotations
+
 import urllib.parse
+from typing import TYPE_CHECKING
 
 from .landing import BaseHandler
 from app.utils.database import DatabaseError
 
+if TYPE_CHECKING:
+    from app import Application
+
 
 class LinkHandler(BaseHandler):
-    async def get(self, link_id):
+    async def get(self, link_id: str):
         try:
             link_record = await self.application.database.get_link(link_id)
         except DatabaseError:
@@ -33,7 +39,7 @@ class LinkHandler(BaseHandler):
         self.render("link.html", link=link, entity=entity)
 
 
-def setup(app):
+def setup(app: Application):
     return [
         (r"/l/(.+)", LinkHandler),
         (r"/link/(.+)", LinkHandler),

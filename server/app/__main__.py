@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 import traceback
 
@@ -29,10 +31,9 @@ def db():
 @db.command()
 def drop():
     config = load_config()
-    run = asyncio.get_event_loop().run_until_complete
 
     try:
-        db = run(Database.connect(config['database']))
+        db = asyncio.run(Database.connect(config['database']))
     except Exception:
         click.echo(
             f"Could not connect to the database.\n{traceback.format_exc()}",
@@ -43,7 +44,7 @@ def drop():
     click.confirm("Are you sure you want to drop all tables in the database? This action cannot be undone.", abort=True)
 
     try:
-        run(db.pool.execute(DROP_TABLES))
+        asyncio.run(db.pool.execute(DROP_TABLES))
     except Exception:
         click.echo(
             f"Could not drop the database.\n{traceback.format_exc()}",

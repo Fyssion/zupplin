@@ -159,5 +159,5 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         return True
 
 
-def setup(app):
+def setup(app: Application):
     return (f'/api/v{app.version}/websocket/connect', WebSocketHandler)

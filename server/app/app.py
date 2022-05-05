@@ -1,13 +1,15 @@
+from __future__ import annotations
+
 import asyncio
 import importlib
 import logging
 import os.path
-import typing
 from collections import defaultdict
-from typing import Any, Protocol, runtime_checkable
+from typing import Any, MutableMapping, Protocol, runtime_checkable
 
 import tornado.web
 from rich.logging import RichHandler
+from tornado.routing import _RuleList
 from tornado.platform.asyncio import BaseAsyncIOLoop
 
 from .modules.websocket import WebSocketHandler
@@ -34,17 +36,19 @@ MODULES_TO_LOAD: list[str] = [
 ]
 
 Route = tuple[str, tornado.web.RequestHandler]
-Routes = typing.Union[Route, list[Route]]
+Routes = Route | list[Route]
 
 
 @runtime_checkable
 class ModuleProtocol(Protocol):
+
     @staticmethod
-    def setup(app) -> Routes:
+    def setup(app: Application) -> Routes:
         ...
 
 
 class NotFound(tornado.web.RequestHandler):
+
     def get(self, *_):
         self.set_status(404)
         self.finish('{"message": "404: Not found", "code": 0}')
@@ -58,7 +62,8 @@ class NotFound(tornado.web.RequestHandler):
 
 
 class Application(tornado.web.Application):
-    def __init__(self, config, database: Database):
+
+    def __init__(self, config: MutableMapping[str, Any], database: Database):
         self.database = database
         self.config = config
 
@@ -76,7 +81,7 @@ class Application(tornado.web.Application):
             autoreload=config['server']['autoreload']
         )
 
-        routes: list[Any] = []
+        routes: _RuleList = []
 
         for module_name in MODULES_TO_LOAD:
             module = importlib.import_module(f'app.modules.{module_name}')
@@ -101,8 +106,9 @@ class Application(tornado.web.Application):
         super().__init__(routes, default_host=config['server']['host'], **settings)
 
     @classmethod
-    def run(cls, config: typing.MutableMapping[str, Any]):
+    def run(cls, config: MutableMapping[str, Any]):
         """Starts the server."""
+
         logger.setLevel(logging.INFO)
 
         BaseAsyncIOLoop.current().make_current()
@@ -121,17 +127,20 @@ class Application(tornado.web.Application):
 
     def get_link_url(self, id: str):
         """Gets the full URL for a short link."""
+
         default = f'http://{self.config["server"]["host"] or "localhost"}:{self.config["server"]["port"]}'
         base_url = self.config['links']['base_url'] or default
         return base_url + id
 
     def dispatch(self, event: str, data: dict[str, Any], *, room_id: str):
         """Dispatches an event to all connected users in a room."""
+
         for user_id in self.room_cache[room_id]:
             self.send_event(user_id, event, data)
 
     def send_event(self, user_id: str, event: str, data: dict[str, Any]):
         """Sends an event to a user if they are connected."""
+
         try:
             connections = self.websocket_connections[user_id]
         except KeyError:
@@ -189,4 +198,5 @@ class Application(tornado.web.Application):
 
         Runs any tasks that need to be run before the server is started.
         """
+
         await self.fill_cache()

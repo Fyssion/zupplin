@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import functools
 
 import orjson
@@ -5,6 +7,7 @@ from cerberus import Validator
 from .handler import RequestHandler
 
 
+# TODO: type-hint this
 def spec(schema, *, allow_unknown: bool = False, require_all: bool = False):
     validator = Validator(schema, allow_unknown=allow_unknown, require_all=require_all)
 

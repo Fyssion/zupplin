@@ -1,6 +1,12 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 from app.utils.database import DatabaseError
 from app.utils.handler import RequestHandler
 from app.utils.spec import spec
+
+if TYPE_CHECKING:
+    from app import Application
 
 
 class Login(RequestHandler, require_token=False):
@@ -20,5 +26,5 @@ class Login(RequestHandler, require_token=False):
         self.finish({'token': token})
 
 
-def setup(app):
+def setup(app: Application):
     return [(f'/api/v{app.version}/login', Login)]

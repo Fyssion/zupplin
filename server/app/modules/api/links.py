@@ -1,5 +1,11 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 from app.utils.database import DatabaseError
 from app.utils.handler import RequestHandler, HTTPError
+
+if TYPE_CHECKING:
+    from app import Application
 
 
 class Links(RequestHandler):
@@ -92,5 +98,5 @@ class Links(RequestHandler):
         self.finish(link)
 
 
-def setup(app):
+def setup(app: Application):
     return (f'/api/v{app.version}/links/(.+)', Links)

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import contextlib
 import datetime
 from enum import Enum
@@ -33,7 +35,7 @@ class Database:
     def __init__(self, pool: asyncpg.Pool):
         self.pool = pool
         self.hasher = argon2.PasswordHasher()
-        self.setup_completed: bool  # if there are any registered users
+        self.setup_completed: bool | None = None
 
     @staticmethod
     async def connection_init(connection: asyncpg.Connection) -> asyncpg.Connection:
@@ -41,7 +43,7 @@ class Database:
         return connection
 
     @classmethod
-    async def connect(cls, config):
+    async def connect(cls, config: dict[str, Any]):
         pool = await asyncpg.create_pool(config['uri'], init=cls.connection_init)
         assert pool
 
@@ -58,14 +60,14 @@ class Database:
         return self
 
     @contextlib.asynccontextmanager
-    async def acquire(self, *, timeout: float = None):
+    async def acquire(self, *, timeout: float | None = None):
         conn: asyncpg.Connection = await self.pool.acquire(timeout=timeout)
         try:
             yield conn
         finally:
             await self.pool.release(conn)
 
-    async def create_account(self, username: Optional[str], name: str, password: str, email: str, id: str) -> dict[str, Any]:
+    async def create_account(self, username: str | None, name: str, password: str, email: str, id: str) -> dict[str, Any]:
         hashed_pw: str = self.hasher.hash(password)
         permission_level = (PermissionLevel.user if self.setup_completed else PermissionLevel.admin).value
 
@@ -113,7 +115,7 @@ class Database:
 
         return record
 
-    async def get_room(self, room_id: str, *, with_last_message=False) -> dict[str, Any]:
+    async def get_room(self, room_id: str, *, with_last_message: bool = False) -> dict[str, Any]:
         if with_last_message:
             query = """SELECT id, name, description, owner_id, type, last_message.*
                        FROM rooms

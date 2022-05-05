@@ -1,7 +1,12 @@
-from typing import Optional
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Optional
 
 from app.utils.handler import RequestHandler
 from app.utils.spec import spec
+
+if TYPE_CHECKING:
+    from app import Application
 
 
 class Messages(RequestHandler):
@@ -73,7 +78,7 @@ class MessagesID(RequestHandler):
         self.finish(message)
 
 
-def setup(app):
+def setup(app: Application):
     return [
         (f'/api/v{app.version}/rooms/(.+)/messages', Messages),
         (f'/api/v{app.version}/rooms/(.+)/messages/(.+)', MessagesID)

@@ -1,5 +1,11 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 from app.utils.handler import RequestHandler
 # from app.utils.spec import spec
+
+if TYPE_CHECKING:
+    from app import Application
 
 
 class Me(RequestHandler):
@@ -76,5 +82,5 @@ class Me(RequestHandler):
         self.finish(me)
 
 
-def setup(app):
+def setup(app: Application):
     return (f'/api/v{app.version}/users/me', Me)

@@ -1,7 +1,12 @@
-from typing import Optional
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Optional
 
 from app.utils.handler import RequestHandler, HTTPError
 from app.utils.spec import spec
+
+if TYPE_CHECKING:
+    from app import Application
 
 
 class Rooms(RequestHandler):
@@ -62,7 +67,7 @@ class RoomsID(RequestHandler):
         self.finish(room)
 
 
-def setup(app):
+def setup(app: Application):
     return [
         (f'/api/v{app.version}/rooms', Rooms),
         (f'/api/v{app.version}/rooms/(.+)', RoomsID)
