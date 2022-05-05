@@ -8,20 +8,20 @@ from app.utils.database import DatabaseError
 from .landing import BaseHandler
 
 if TYPE_CHECKING:
-    from app import Application
+    from app.app import Application
 
 
 class LinkHandler(BaseHandler):
     async def get(self, link_id: str):
         try:
-            link_record = await self.application.database.get_link(link_id)
+            link_record = await self.database.get_link(link_id)
         except DatabaseError:
             return self.send_error(404)
 
         entity = None
 
         if link_record['type'] == 0:
-            room_record = await self.application.database.get_room(link_record['entity_id'])
+            room_record = await self.database.get_room(link_record['entity_id'])
             entity = {
                 'id': room_record['id'],
                 'name': room_record['name'],

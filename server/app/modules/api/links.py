@@ -6,7 +6,7 @@ from app.utils.database import DatabaseError
 from app.utils.handler import HTTPError, RequestHandler
 
 if TYPE_CHECKING:
-    from app import Application
+    from app.app import Application
 
 
 class Links(RequestHandler):

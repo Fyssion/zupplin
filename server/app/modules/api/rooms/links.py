@@ -7,7 +7,7 @@ from app.utils.handler import RequestHandler  # , HTTPError
 from app.utils.spec import spec
 
 if TYPE_CHECKING:
-    from app import Application
+    from app.app import Application
 
 
 class Links(RequestHandler):

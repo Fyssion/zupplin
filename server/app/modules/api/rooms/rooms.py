@@ -6,7 +6,7 @@ from app.utils.handler import HTTPError, RequestHandler
 from app.utils.spec import spec
 
 if TYPE_CHECKING:
-    from app import Application
+    from app.app import Application
 
 
 class Rooms(RequestHandler):

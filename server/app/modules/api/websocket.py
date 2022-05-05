@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from app.utils.handler import RequestHandler
 
 if TYPE_CHECKING:
-    from app import Application
+    from app.app import Application
 
 
 class Websocket(RequestHandler):

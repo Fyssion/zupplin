@@ -5,7 +5,7 @@ import importlib
 import logging
 import os.path
 from collections import defaultdict
-from typing import Any, MutableMapping, Protocol, runtime_checkable
+from typing import Any, MutableMapping, Protocol, Union, runtime_checkable
 
 import tornado.web
 from rich.logging import RichHandler
@@ -35,7 +35,7 @@ MODULES_TO_LOAD: list[str] = [
 ]
 
 Route = tuple[str, tornado.web.RequestHandler]
-Routes = Route | list[Route]
+Routes = Union[Route, list[Route]]
 
 
 @runtime_checkable

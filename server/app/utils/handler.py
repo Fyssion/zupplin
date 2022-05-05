@@ -9,7 +9,7 @@ import tornado.web
 from .database import Database
 
 if TYPE_CHECKING:
-    from app import Application
+    from app.app import Application
 
     err = tuple[int, str]
 

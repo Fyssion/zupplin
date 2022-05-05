@@ -1,13 +1,19 @@
+from __future__ import annotations
+
 import asyncio
 import datetime
 import logging
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 import orjson
 import tornado.ioloop
 import tornado.websocket
 from cerberus import Validator
+
+if TYPE_CHECKING:
+    from app.app import Application
+
 
 # websocket opcodes:
 # dispatch: dispatched events like new messages
@@ -40,6 +46,7 @@ identify_schema = Validator(identify_schema)
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
+    application: Application
     HEARTBEAT_INTERVAL = 60000  # 60 seconds. hardcoded for now.
 
     def initialize(self, *args, **kwargs):
@@ -65,8 +72,8 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         opcode: WebsocketOpcode,
         data: Optional[dict[str, Any]] = None,
         *,
-        event_name: str = None,
-        increment: int = None,
+        event_name: str | None = None,
+        increment: int | None = None,
     ):
         message = {
             'opcode': opcode.value,
@@ -101,7 +108,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
         logging.info(f'User {self.user_id} connected and identified.')
 
-    def on_heartbeat(self, data=None):
+    def on_heartbeat(self, *_):
         self.heartbeat_event.set()
         self.last_heartbeat_ack = datetime.datetime.utcnow()
         self.send_message(opcode=WebsocketOpcode.HEARTBEAT_ACK)
@@ -130,7 +137,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         method(self, data.get('data'))
 
     def on_close(self):
-        if not self.identified:
+        if not self.identified or not self.user_id:
             return
 
         logging.info(f'Closing websocket connection with user {self.user_id}')
@@ -138,7 +145,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         self.heartbeat_task.cancel()
         self.dispatch_task.cancel()
 
-        user_connections: list = self.application.websocket_connections[self.user_id]
+        user_connections: list[WebSocketHandler] = self.application.websocket_connections[self.user_id]
         user_connections.pop(user_connections.index(self))
         if not user_connections:
             self.application.websocket_connections.pop(self.user_id)
