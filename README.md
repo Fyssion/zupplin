@@ -1,8 +1,6 @@
 # zupplin
 
-Zupplin is a chat service designed for students.
-
-> This is alpha software. All of this is a WIP and is subject to change.
+Zupplin is a toy chat server made for fun.
 
 ## Codebases
 
@@ -15,7 +13,7 @@ Zupplin is a chat service designed for students.
 
 ## Why?
 
-I wanted to try making a centralized chat service.
+I wanted to try making a simple chat server.
 
 ## Contributing
 

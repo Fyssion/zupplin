@@ -1,6 +1,7 @@
 # Contributing to Zupplin
 
-Thank you for taking the time to contribute. It improves the project substantially.
+Thank you for taking the time to contribute and help out.
+While this is a toy project, I still appreciate all contributions.
 
 The following are guidelines for contributing to the project.
 
