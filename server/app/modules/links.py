@@ -3,8 +3,9 @@ from __future__ import annotations
 import urllib.parse
 from typing import TYPE_CHECKING
 
-from .landing import BaseHandler
 from app.utils.database import DatabaseError
+
+from .landing import BaseHandler
 
 if TYPE_CHECKING:
     from app import Application

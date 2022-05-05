@@ -7,7 +7,7 @@ import click
 import toml
 
 from .app import Application
-from .utils.database import Database, DROP_TABLES
+from .utils.database import DROP_TABLES, Database
 
 
 def load_config():

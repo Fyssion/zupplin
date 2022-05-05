@@ -5,10 +5,9 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 import orjson
-import tornado.websocket
 import tornado.ioloop
+import tornado.websocket
 from cerberus import Validator
-
 
 # websocket opcodes:
 # dispatch: dispatched events like new messages

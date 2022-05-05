@@ -9,13 +9,12 @@ from typing import Any, MutableMapping, Protocol, runtime_checkable
 
 import tornado.web
 from rich.logging import RichHandler
-from tornado.routing import _RuleList
 from tornado.platform.asyncio import BaseAsyncIOLoop
+from tornado.routing import _RuleList
 
 from .modules.websocket import WebSocketHandler
 from .utils.database import Database
 from .utils.token import Tokens
-
 
 logger: logging.Logger = logging.getLogger()
 logger.addHandler(RichHandler())

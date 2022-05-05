@@ -1,8 +1,9 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from app.utils.database import DatabaseError
-from app.utils.handler import RequestHandler, HTTPError
+from app.utils.handler import HTTPError, RequestHandler
 
 if TYPE_CHECKING:
     from app import Application
