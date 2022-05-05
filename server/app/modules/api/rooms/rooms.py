@@ -10,10 +10,12 @@ if TYPE_CHECKING:
 
 
 class Rooms(RequestHandler):
-    @spec({
-        'name': {'type': 'string', 'maxlength': 128, 'required': True},
-        'description': {'type': 'string', 'maxlength': 1024}
-    })
+    @spec(
+        {
+            'name': {'type': 'string', 'maxlength': 128, 'required': True},
+            'description': {'type': 'string', 'maxlength': 1024},
+        }
+    )
     async def post(self):
         id = self.tokens.create_id()
         name: str = self.body['name']
@@ -37,7 +39,7 @@ class Rooms(RequestHandler):
             'name': name,
             'description': description,
             'owner_id': self.user_id,
-            'type': room_type
+            'type': room_type,
         }
         self.application.send_event(self.user_id, 'ROOM_JOIN', room)
 
@@ -61,14 +63,11 @@ class RoomsID(RequestHandler):
             'id': room_id,
             'name': record['name'],
             'description': record['description'],
-            'owner_id': record['owner_id']
+            'owner_id': record['owner_id'],
         }
 
         self.finish(room)
 
 
 def setup(app: Application):
-    return [
-        (f'/api/v{app.version}/rooms', Rooms),
-        (f'/api/v{app.version}/rooms/(.+)', RoomsID)
-        ]
+    return [(f'/api/v{app.version}/rooms', Rooms), (f'/api/v{app.version}/rooms/(.+)', RoomsID)]

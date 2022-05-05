@@ -40,14 +40,12 @@ Routes = Route | list[Route]
 
 @runtime_checkable
 class ModuleProtocol(Protocol):
-
     @staticmethod
     def setup(app: Application) -> Routes:
         ...
 
 
 class NotFound(tornado.web.RequestHandler):
-
     def get(self, *_):
         self.set_status(404)
         self.finish('{"message": "404: Not found", "code": 0}')
@@ -61,7 +59,6 @@ class NotFound(tornado.web.RequestHandler):
 
 
 class Application(tornado.web.Application):
-
     def __init__(self, config: MutableMapping[str, Any], database: Database):
         self.database = database
         self.config = config
@@ -77,7 +74,7 @@ class Application(tornado.web.Application):
             template_path=os.path.join(os.path.dirname(__file__), 'templates'),
             static_path=os.path.join(os.path.dirname(__file__), 'static'),
             default_handler_class=NotFound,
-            autoreload=config['server']['autoreload']
+            autoreload=config['server']['autoreload'],
         )
 
         routes: _RuleList = []
@@ -120,14 +117,18 @@ class Application(tornado.web.Application):
         loop.run_until_complete(self.prepare())
 
         self.listen(config['server']['port'], config['server']['host'])
-        logging.info(f'Listening at http://{config["server"]["host"] or "localhost"}:{config["server"]["port"]}')
+        logging.info(
+            f'Listening at http://{config["server"]["host"] or "localhost"}:{config["server"]["port"]}'
+        )
         logging.info('Ready to go.')
         BaseAsyncIOLoop.current().start()
 
     def get_link_url(self, id: str):
         """Gets the full URL for a short link."""
 
-        default = f'http://{self.config["server"]["host"] or "localhost"}:{self.config["server"]["port"]}'
+        default = (
+            f'http://{self.config["server"]["host"] or "localhost"}:{self.config["server"]["port"]}'
+        )
         base_url = self.config['links']['base_url'] or default
         return base_url + id
 
@@ -163,17 +164,13 @@ class Application(tornado.web.Application):
             users = await conn.fetch('SELECT id, username, name FROM users;')
 
         for record in records:
-            user = {
-                'id': record['id'],
-                'username': record['username'],
-                'name': record['name']
-            }
+            user = {'id': record['id'], 'username': record['username'], 'name': record['name']}
 
             member = {
                 'id': record['id'],
                 'user': user,
                 'room_id': record['room_id'],
-                'permission_level': record['permission_level']
+                'permission_level': record['permission_level'],
             }
 
             self.user_cache[record['id']] = user
@@ -184,11 +181,7 @@ class Application(tornado.web.Application):
             if self.user_cache.get(record['id']):
                 return
 
-            user = {
-                'id': record['id'],
-                'username': record['username'],
-                'name': record['name']
-            }
+            user = {'id': record['id'], 'username': record['username'], 'name': record['name']}
 
             self.user_cache[record['id']] = user
 

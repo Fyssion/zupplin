@@ -11,10 +11,12 @@ if TYPE_CHECKING:
 
 
 class Login(RequestHandler, require_token=False):
-    @spec({
-        'email': {'type': 'string'},
-        'password': {'type': 'string'},
-    })
+    @spec(
+        {
+            'email': {'type': 'string'},
+            'password': {'type': 'string'},
+        }
+    )
     async def post(self):
         body = self.body
         try:

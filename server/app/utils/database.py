@@ -39,7 +39,9 @@ class Database:
 
     @staticmethod
     async def connection_init(connection: asyncpg.Connection) -> asyncpg.Connection:
-        await connection.set_type_codec('json', encoder=orjson.dumps, decoder=orjson.loads, schema='pg_catalog')
+        await connection.set_type_codec(
+            'json', encoder=orjson.dumps, decoder=orjson.loads, schema='pg_catalog'
+        )
         return connection
 
     @classmethod
@@ -67,9 +69,13 @@ class Database:
         finally:
             await self.pool.release(conn)
 
-    async def create_account(self, username: str | None, name: str, password: str, email: str, id: str) -> dict[str, Any]:
+    async def create_account(
+        self, username: str | None, name: str, password: str, email: str, id: str
+    ) -> dict[str, Any]:
         hashed_pw: str = self.hasher.hash(password)
-        permission_level = (PermissionLevel.user if self.setup_completed else PermissionLevel.admin).value
+        permission_level = (
+            PermissionLevel.user if self.setup_completed else PermissionLevel.admin
+        ).value
 
         query = """INSERT INTO users (id, username, name, hashed_password, email, permission_level)
                    VALUES ($1, $2, $3, $4, $5, $6)

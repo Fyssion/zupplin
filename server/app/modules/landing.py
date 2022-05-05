@@ -24,7 +24,4 @@ class AboutHandler(BaseHandler):
 
 
 def setup(app: Application):
-    return [
-        (r"/", LandingHandler),
-        (r"/about", AboutHandler)
-    ]
+    return [(r"/", LandingHandler), (r"/about", AboutHandler)]

@@ -49,10 +49,7 @@ class RequestHandler(tornado.web.RequestHandler):
 
     def write_error(self, status_code: int, **kwargs):
         try:
-            reason: dict[str, Any] = {
-                'code': kwargs.pop('code'),
-                'message': kwargs.pop('message')
-            }
+            reason: dict[str, Any] = {'code': kwargs.pop('code'), 'message': kwargs.pop('message')}
             if kwargs:
                 reason['errors'] = kwargs
 
@@ -90,7 +87,9 @@ class RequestHandler(tornado.web.RequestHandler):
     def set_default_headers(self):
         self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header('Access-Control-Allow-Headers', '*')
-        self.set_header('Access-Control-Allow-Methods', ', '.join(map(str.upper, self.SUPPORTED_METHODS)))
+        self.set_header(
+            'Access-Control-Allow-Methods', ', '.join(map(str.upper, self.SUPPORTED_METHODS))
+        )
 
     def options(self, *_):
         self.set_status(204)

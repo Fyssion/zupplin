@@ -60,7 +60,14 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             message = orjson.dumps(message)
         super().write_message(message, binary)
 
-    def send_message(self, opcode: WebsocketOpcode, data: Optional[dict[str, Any]] = None, *, event_name: str = None, increment: int = None):
+    def send_message(
+        self,
+        opcode: WebsocketOpcode,
+        data: Optional[dict[str, Any]] = None,
+        *,
+        event_name: str = None,
+        increment: int = None,
+    ):
         message = {
             'opcode': opcode.value,
             'data': data,
@@ -114,7 +121,9 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         try:
             opcode = WebsocketOpcode(data['opcode'])
         except ValueError:
-            self.close(WebsocketError.INVALID_OPCODE, f'Invalid opcode recieved ({data["opcode"]}).')
+            self.close(
+                WebsocketError.INVALID_OPCODE, f'Invalid opcode recieved ({data["opcode"]}).'
+            )
             return
 
         method = self.OPCODE_MAPPING[opcode]
@@ -151,7 +160,9 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
     async def dispatch_loop(self):
         while True:
             event, data = await self.event_queue.get()
-            self.send_message(WebsocketOpcode.DISPATCH, data, event_name=event, increment=self.increment)
+            self.send_message(
+                WebsocketOpcode.DISPATCH, data, event_name=event, increment=self.increment
+            )
             self.increment += 1
 
     def check_origin(self, origin):

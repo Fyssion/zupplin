@@ -25,13 +25,15 @@ class LinkHandler(BaseHandler):
             entity = {
                 'id': room_record['id'],
                 'name': room_record['name'],
-                'description': room_record['description']
+                'description': room_record['description'],
             }
 
             link = {
                 'id': link_id,
                 'type': link_record['type'],
-                'client_url': urllib.parse.urljoin(self.application.client_url, f'?joinRoomCode={link_id}')
+                'client_url': urllib.parse.urljoin(
+                    self.application.client_url, f'?joinRoomCode={link_id}'
+                ),
             }
 
         else:

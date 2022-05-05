@@ -13,7 +13,6 @@ def spec(schema, *, allow_unknown: bool = False, require_all: bool = False):
     validator = Validator(schema, allow_unknown=allow_unknown, require_all=require_all)
 
     def predicate(func):
-
         @functools.wraps(func)
         def wrapper(self: RequestHandler, *args, **kwargs):
             raw_body: bytes = self.request.body
@@ -26,7 +25,7 @@ def spec(schema, *, allow_unknown: bool = False, require_all: bool = False):
             status: bool = validator.validate(body)  # type: ignore
 
             if not status:
-                return self.error((0, 'Invalid'),  **validator.errors)  # type: ignore
+                return self.error((0, 'Invalid'), **validator.errors)  # type: ignore
 
             body = validator.normalized(body)  # type: ignore
 
@@ -37,4 +36,5 @@ def spec(schema, *, allow_unknown: bool = False, require_all: bool = False):
             return func(self, *args, **kwargs)
 
         return wrapper
+
     return predicate

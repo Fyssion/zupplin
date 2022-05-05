@@ -46,7 +46,7 @@ class Me(RequestHandler):
             'id': user_record['id'],
             'name': user_record['name'],
             'username': user_record['username'],
-            'rooms': {}
+            'rooms': {},
         }
 
         for record in room_records:
@@ -54,14 +54,14 @@ class Me(RequestHandler):
                 message_author = {
                     'id': record['message_author_id'],
                     'name': record['message_author_name'],
-                    'username': record['message_author_username']
+                    'username': record['message_author_username'],
                 }
 
                 last_message = {
                     'id': record['message_id'],
                     'content': record['message_content'],
                     'room_id': record['message_room_id'],
-                    'author': message_author
+                    'author': message_author,
                 }
 
             else:
@@ -73,10 +73,8 @@ class Me(RequestHandler):
                 'description': record['description'],
                 'owner_id': record['owner_id'],
                 'type': record['type'],
-                'me': {
-                    'permission_level': record['permission_level']
-                },
-                'last_message': last_message
+                'me': {'permission_level': record['permission_level']},
+                'last_message': last_message,
             }
 
             me['rooms'][record['id']] = room

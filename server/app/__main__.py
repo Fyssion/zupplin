@@ -41,7 +41,10 @@ def drop():
         )
         return
 
-    click.confirm("Are you sure you want to drop all tables in the database? This action cannot be undone.", abort=True)
+    click.confirm(
+        "Are you sure you want to drop all tables in the database? This action cannot be undone.",
+        abort=True,
+    )
 
     try:
         asyncio.run(db.pool.execute(DROP_TABLES))

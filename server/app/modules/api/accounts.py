@@ -11,19 +11,22 @@ if TYPE_CHECKING:
 
 
 class Accounts(RequestHandler, require_token=False):
-
-    @spec({
-        'username': {'type': 'string', 'maxlength': 60},
-        'name': {'type': 'string', 'maxlength': 60, 'required': True},
-        'password': {'type': 'string', 'required': True},
-        'email': {'type': 'string', 'required': True},
-    })
+    @spec(
+        {
+            'username': {'type': 'string', 'maxlength': 60},
+            'name': {'type': 'string', 'maxlength': 60, 'required': True},
+            'password': {'type': 'string', 'required': True},
+            'email': {'type': 'string', 'required': True},
+        }
+    )
     async def post(self):
         body = self.body
 
         id = self.tokens.create_id()
         try:
-            record = await self.database.create_account(body.get('username'), body['name'], body['password'], body['email'], id)
+            record = await self.database.create_account(
+                body.get('username'), body['name'], body['password'], body['email'], id
+            )
         except DatabaseError:
             self.error((400, 'That username is already taken.'))
             return
@@ -39,9 +42,12 @@ class Accounts(RequestHandler, require_token=False):
         token = self.tokens.create_token(record['id'])
         self.finish({'token': token})
 
-    @spec({
-        'email': {'type': 'string'},
-    }, require_all=True)
+    @spec(
+        {
+            'email': {'type': 'string'},
+        },
+        require_all=True,
+    )
     async def get(self):
         query = "SELECT 1 FROM accounts WHERE email=$1;"
 

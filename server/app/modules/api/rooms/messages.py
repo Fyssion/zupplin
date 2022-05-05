@@ -10,9 +10,11 @@ if TYPE_CHECKING:
 
 
 class Messages(RequestHandler):
-    @spec({
-        'content': {'type': 'string', 'maxlength': 4096},
-    })
+    @spec(
+        {
+            'content': {'type': 'string', 'maxlength': 4096},
+        }
+    )
     async def post(self, room_id: str):
         if not self.application.room_cache.get(room_id):
             return self.error((404, 'Room not found.'), 404)
@@ -38,7 +40,7 @@ class Messages(RequestHandler):
             'content': content,
             'room_id': room_id,
             'author': author,
-            'type': message_type
+            'type': message_type,
         }
         self.application.dispatch('MESSAGE', message, room_id=room_id)
 
@@ -72,7 +74,7 @@ class MessagesID(RequestHandler):
             'content': record['content'],
             'room_id': room_id,
             'author': author,
-            'type': record['type']
+            'type': record['type'],
         }
 
         self.finish(message)
@@ -81,5 +83,5 @@ class MessagesID(RequestHandler):
 def setup(app: Application):
     return [
         (f'/api/v{app.version}/rooms/(.+)/messages', Messages),
-        (f'/api/v{app.version}/rooms/(.+)/messages/(.+)', MessagesID)
-        ]
+        (f'/api/v{app.version}/rooms/(.+)/messages/(.+)', MessagesID),
+    ]

@@ -30,14 +30,14 @@ class Links(RequestHandler):
             message_author = {
                 'id': record['message_author_id'],
                 'name': record['message_author_name'],
-                'username': record['message_author_username']
+                'username': record['message_author_username'],
             }
 
             last_message = {
                 'id': record['message_id'],
                 'content': record['message_content'],
                 'room_id': record['message_room_id'],
-                'author': message_author
+                'author': message_author,
             }
 
         else:
@@ -49,10 +49,8 @@ class Links(RequestHandler):
             'description': record['description'],
             'owner_id': record['owner_id'],
             'type': record['type'],
-            'me': {
-                'permission_level': 0
-                },
-            'last_message': last_message
+            'me': {'permission_level': 0},
+            'last_message': last_message,
         }
         self.application.send_event(self.user_id, 'ROOM_JOIN', room)
 
@@ -85,16 +83,13 @@ class Links(RequestHandler):
             entity = {
                 'id': room_record['id'],
                 'name': room_record['name'],
-                'description': room_record['description']
+                'description': room_record['description'],
             }
 
         else:
             return self.send_error(500)
 
-        link = {
-            'type': link_record['type'],
-            'entity': entity
-        }
+        link = {'type': link_record['type'], 'entity': entity}
 
         self.finish(link)
 

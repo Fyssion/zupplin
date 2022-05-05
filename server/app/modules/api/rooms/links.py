@@ -11,10 +11,18 @@ if TYPE_CHECKING:
 
 
 class Links(RequestHandler):
-    @spec({
-        'max_age': {'type': 'number', 'default': 86400, 'max': 604800, 'min': 0, 'required': False},
-        'max_uses': {'type': 'number', 'default': 0, 'min': 0, 'max': 100, 'required': False}
-    })
+    @spec(
+        {
+            'max_age': {
+                'type': 'number',
+                'default': 86400,
+                'max': 604800,
+                'min': 0,
+                'required': False,
+            },
+            'max_uses': {'type': 'number', 'default': 0, 'min': 0, 'max': 100, 'required': False},
+        }
+    )
     async def post(self, room_id: str):
         async with self.database.acquire() as conn:
             id = None
@@ -33,7 +41,9 @@ class Links(RequestHandler):
                 return self.send_error(500)  # hopefully this will never happen
 
             if self.body['max_age']:
-                expires_at = datetime.datetime.utcnow() + datetime.timedelta(seconds=self.body['max_age'])
+                expires_at = datetime.datetime.utcnow() + datetime.timedelta(
+                    seconds=self.body['max_age']
+                )
             else:
                 expires_at = None
 
