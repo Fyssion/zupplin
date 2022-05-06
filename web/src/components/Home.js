@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 
 import './Home.css';
+import { wsUrl } from '../lib/constants.ts';
 import WS from '../lib/websocket.js';
 import api from '../lib/api.ts';
 import SideBar from './sidebar/SideBar.js';
@@ -42,7 +43,7 @@ class Home extends React.Component {
         loggedIn: false,
         redirect: false,
         token: token,
-        websocket: new WS(`ws://${url}/websocket/connect`),
+        websocket: new WS(wsUrl),
         me: null,
         selectedRoom: null
     };
