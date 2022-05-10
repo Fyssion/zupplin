@@ -49,7 +49,7 @@ class Accounts(RequestHandler, require_token=False):
         require_all=True,
     )
     async def get(self):
-        query = "SELECT 1 FROM accounts WHERE email=$1;"
+        query = 'SELECT 1 FROM accounts WHERE email=$1;'
 
         async with self.database.acquire() as conn:
             exists = await conn.fetchval(query, self.get_argument('email'))

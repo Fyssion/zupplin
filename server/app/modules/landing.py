@@ -20,13 +20,13 @@ class BaseHandler(RequestHandler):
 
 class LandingHandler(BaseHandler):
     async def get(self):
-        self.render("landing.html")
+        self.render('landing.html')
 
 
 class AboutHandler(BaseHandler):
     async def get(self):
-        self.render("about.html")
+        self.render('about.html')
 
 
 def setup(app: Application):
-    return [(r"/", LandingHandler), (r"/about", AboutHandler)]
+    return [(r'/', LandingHandler), (r'/about', AboutHandler)]

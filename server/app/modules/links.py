@@ -39,11 +39,11 @@ class LinkHandler(BaseHandler):
         else:
             return self.send_error(500)
 
-        self.render("link.html", link=link, entity=entity)
+        self.render('link.html', link=link, entity=entity)
 
 
 def setup(app: Application):
     return [
-        (r"/l/(.+)", LinkHandler),
-        (r"/link/(.+)", LinkHandler),
+        (r'/l/(.+)', LinkHandler),
+        (r'/link/(.+)', LinkHandler),
     ]

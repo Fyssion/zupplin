@@ -65,7 +65,7 @@ class RequestHandler(tornado.web.RequestHandler):
     AUTH_HEADER_REGEX = re.compile(r'(?:Bearer )(.+)')
 
     async def prepare(self):
-        if self.require_token and self.request.method != "OPTIONS":
+        if self.require_token and self.request.method != 'OPTIONS':
             auth_header = self.request.headers.get('Authorization')
 
             if not auth_header:
