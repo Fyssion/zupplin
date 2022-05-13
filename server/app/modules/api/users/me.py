@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from app.utils.errors import AppError
 from app.utils.handler import RequestHandler
 
 # from app.utils.spec import spec
@@ -12,10 +13,6 @@ if TYPE_CHECKING:
 
 class Me(RequestHandler):
     async def get(self):
-        user_query = """SELECT id, username, name
-                        FROM users
-                        WHERE id=$1;
-                     """
         rooms_query = """SELECT id, name, description, owner_id, type, permission_level,
                                 last_message.*
                          FROM rooms
@@ -35,17 +32,18 @@ class Me(RequestHandler):
                       """
 
         async with self.database.acquire() as conn:
-            user_record = await conn.fetchrow(user_query, self.user_id)
             room_records = await conn.fetch(rooms_query, self.user_id)
 
-        if not user_record:
+        user = self.application.user_cache.get(self.user_id)
+
+        if not user:
             # the sky has fallen
-            return self.send_error(500)
+            raise AppError('User not found')
 
         me = {
-            'id': user_record['id'],
-            'name': user_record['name'],
-            'username': user_record['username'],
+            'id': user['id'],
+            'name': user['name'],
+            'username': user['username'],
             'rooms': {},
         }
 
