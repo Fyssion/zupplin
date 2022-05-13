@@ -22,12 +22,12 @@ class PermissionLevel(Enum):
 
 
 DROP_TABLES = """
-DROP TABLE users;
-DROP TABLE user_settings;
-DROP TABLE rooms;
-DROP TABLE room_members;
-DROP TABLE messages;
 DROP TABLE links;
+DROP TABLE messages;
+DROP TABLE room_members;
+DROP TABLE rooms;
+DROP TABLE user_settings;
+DROP TABLE users;
 """
 
 

@@ -28,12 +28,11 @@ def db():
     pass
 
 
-@db.command()
-def drop():
+async def _drop():
     config = load_config()
 
     try:
-        db = asyncio.run(Database.connect(config['database']))
+        db = await Database.connect(config['database'])
     except Exception:
         click.echo(
             f"Could not connect to the database.\n{traceback.format_exc()}",
@@ -47,7 +46,7 @@ def drop():
     )
 
     try:
-        asyncio.run(db.pool.execute(DROP_TABLES))
+        await db.pool.execute(DROP_TABLES)
     except Exception:
         click.echo(
             f"Could not drop the database.\n{traceback.format_exc()}",
@@ -56,6 +55,11 @@ def drop():
         return
 
     click.echo("Dropped all tables in the database.")
+
+
+@db.command()
+def drop():
+    asyncio.run(_drop())
 
 
 cli()
