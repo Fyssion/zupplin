@@ -100,6 +100,10 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             self.close(WebsocketError.INVALID_TOKEN, 'Token is invalid.')
             return
 
+        if self.user_id not in self.application.user_cache:
+            self.close(WebsocketError.INVALID_TOKEN, 'Token is invalid.')
+            return
+
         self.application.websocket_connections[self.user_id].append(self)
         self.identified = True
 
