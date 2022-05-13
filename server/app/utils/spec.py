@@ -18,7 +18,7 @@ def spec(schema, *, allow_unknown: bool = False, require_all: bool = False):
             raw_body: bytes = self.request.body
 
             if not raw_body:
-                return self.error((0, 'Missing required key'))
+                return self.error((0, 'Missing body'))
 
             body = orjson.loads(raw_body)
 
