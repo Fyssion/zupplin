@@ -3,7 +3,7 @@ from __future__ import annotations
 import contextlib
 import datetime
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 import argon2
 import asyncpg
@@ -22,6 +22,7 @@ class PermissionLevel(Enum):
 
 
 DROP_TABLES = """
+DROP TABLE relationships;
 DROP TABLE links;
 DROP TABLE messages;
 DROP TABLE room_members;
@@ -32,6 +33,7 @@ DROP TABLE users;
 
 
 class Database:
+
     def __init__(self, pool: asyncpg.Pool):
         self.pool = pool
         self.hasher = argon2.PasswordHasher()
@@ -44,15 +46,18 @@ class Database:
         )
         return connection
 
+    async def create_tables(self):
+        with open('schema.sql', 'r') as f:
+            await self.pool.execute(f.read())
+
     @classmethod
     async def connect(cls, config: dict[str, Any]):
         pool = await asyncpg.create_pool(config['uri'], init=cls.connection_init)
         assert pool
 
-        with open('schema.sql', 'r') as f:
-            await pool.execute(f.read())
-
         self = cls(pool)
+
+        await self.create_tables()
 
         if await pool.fetchval('SELECT 1 FROM users LIMIT 1;'):
             self.setup_completed = True
@@ -162,18 +167,32 @@ class Database:
         async with self.acquire() as conn:
             record = await conn.fetchrow(query, link_id)
 
-            if not record:
-                raise DatabaseError
+        if not record:
+            raise DatabaseError
 
-            async def delete_link():
-                await conn.execute('DELETE FROM links WHERE id=$1', link_id)
+        async def delete_link():
+            await conn.execute('DELETE FROM links WHERE id=$1', link_id)
 
-            if record['expires_at'] and record['expires_at'] < datetime.datetime.utcnow():
-                await delete_link()
-                raise DatabaseError
+        if record['expires_at'] and record['expires_at'] < datetime.datetime.utcnow():
+            await delete_link()
+            raise DatabaseError
 
-            if record['max_uses'] and record['uses'] >= record['max_uses']:
-                await delete_link()
-                raise DatabaseError
+        if record['max_uses'] and record['uses'] >= record['max_uses']:
+            await delete_link()
+            raise DatabaseError
+
+        return record
+
+    async def get_relationship(self, user_id: str, recipient_id: str) -> dict[str, Any]:
+        query = """SELECT type, user_id, recipient_id, created_at
+                   FROM relationships
+                   WHERE user_id=$1 AND recipient_id=$2;
+                   """
+
+        async with self.acquire() as conn:
+            record = await conn.fetchrow(query, user_id, recipient_id)
+
+        if not record:
+            raise DatabaseError
 
         return record

@@ -18,6 +18,8 @@ toml = "^0.10.2"
 tornado = "^6.1"
 
 [tool.poetry.dev-dependencies]
+pytest = "^7.1.2"
+pytest-asyncio = "^0.18.3"
 isort = "^5.10.1"
 black = "^22.3.0"
 
@@ -41,3 +43,7 @@ profile = "black"
 combine_as_imports = true
 combine_star = true
 line_length = 100
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+filterwarnings = "ignore:There is no current event loop:DeprecationWarning"

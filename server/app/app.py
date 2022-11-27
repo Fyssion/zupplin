@@ -8,6 +8,7 @@ from collections import defaultdict
 from typing import Any, MutableMapping, Protocol, Union, runtime_checkable
 
 import tornado.web
+import tornado.log
 from rich.logging import RichHandler
 from tornado.platform.asyncio import BaseAsyncIOLoop
 from tornado.routing import _RuleList
@@ -27,6 +28,7 @@ MODULES_TO_LOAD: list[str] = [
     'api.accounts',
     'api.login',
     'api.links',
+    'api.relationships',
     'api.rooms.links',
     'api.rooms.messages',
     'api.rooms.rooms',
@@ -98,6 +100,8 @@ class Application(tornado.web.Application):
         # user_id: info
         self.user_cache: dict[str, dict[str, Any]] = {}
         self.room_member_cache: dict[str, dict[str, Any]] = {}
+        # user_id: list[tuple[type, user_id]]
+        self.relationship_cache: defaultdict[str, list[tuple[int, str]]] = defaultdict(list)
 
         super().__init__(routes, default_host=config['server']['host'], **settings)
 
@@ -127,7 +131,7 @@ class Application(tornado.web.Application):
         """Gets the full URL for a short link."""
 
         default = (
-            f'http://{self.config["server"]["host"] or "localhost"}:{self.config["server"]["port"]}'
+            f'http://{self.config["server"]["host"] or "localhost"}:{self.config["server"]["port"]}/l/'
         )
         base_url = self.config['links']['base_url'] or default
         return base_url + id
@@ -162,8 +166,10 @@ class Application(tornado.web.Application):
         async with self.database.acquire() as conn:
             records = await conn.fetch(query)
             users = await conn.fetch('SELECT id, username, name FROM users;')
+            relationships = await conn.fetch('SELECT type, user_id, recipient_id FROM relationships;')
 
         for record in records:
+            # TODO: fix all of this
             user = {'id': record['id'], 'username': record['username'], 'name': record['name']}
 
             member = {
@@ -185,6 +191,10 @@ class Application(tornado.web.Application):
 
             self.user_cache[record['id']] = user
 
+        for relationship in relationships:
+            user = self.relationship_cache[relationship['user_id']]
+            user.append((relationship['type'], relationship['recipient_id']))
+
     async def prepare(self):
         """Prepares the server to start.
 
@@ -192,3 +202,10 @@ class Application(tornado.web.Application):
         """
 
         await self.fill_cache()
+
+    def get_relationship(self, user_id: str, recipient_id: str) -> dict[str, Any] | None:
+        for uid, (type, rid) in self.relationship_cache.items():
+            if user_id == uid and recipient_id == rid:
+                return {'type': type, 'user_id': uid, 'recipient_id': rid}
+
+        return None

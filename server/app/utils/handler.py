@@ -15,9 +15,10 @@ if TYPE_CHECKING:
 
 
 class HTTPError:
+    BAD_REQUEST: err = (400, 'Bad Request')
     NOT_FOUND: err = (404, 'Not Found')
     INVALID_METHOD: err = (405, 'Method Not Allowed')
-    UNATHORIZED: err = (401, 'Unauthorized')
+    UNAUTHORIZED: err = (401, 'Unauthorized')
 
 
 class RequestHandler(tornado.web.RequestHandler):

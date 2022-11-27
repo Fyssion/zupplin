@@ -1,5 +1,9 @@
 SET TIME ZONE 'utc';
 
+CREATE OR REPLACE function utc_now() returns timestamp as $$
+    select now() at time zone 'utc';
+$$ language sql;
+
 
 CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY,
@@ -10,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
     hashed_password TEXT NOT NULL,
     permission_level INT NOT NULL DEFAULT 0,
 
-    created_at TIMESTAMP DEFAULT (now() at time zone 'utc')
+    created_at TIMESTAMP DEFAULT utc_now()
 );
 
 
@@ -29,7 +33,7 @@ CREATE TABLE IF NOT EXISTS rooms (
     owner_id TEXT REFERENCES users ON DELETE NO ACTION ON UPDATE NO ACTION,
     type INT DEFAULT 0 NOT NULL,
 
-    created_at TIMESTAMP DEFAULT (now() at time zone 'utc')
+    created_at TIMESTAMP DEFAULT utc_now()
 );
 
 
@@ -39,7 +43,7 @@ CREATE TABLE IF NOT EXISTS room_members (
     permission_level INT NOT NULL DEFAULT 0,
     PRIMARY KEY (user_id, room_id),
 
-    joined_at TIMESTAMP DEFAULT (now() at time zone 'utc')
+    joined_at TIMESTAMP DEFAULT utc_now()
 );
 
 
@@ -50,8 +54,7 @@ CREATE TABLE IF NOT EXISTS messages (
     room_id TEXT NOT NULL REFERENCES rooms ON DELETE CASCADE,
     author_id TEXT NOT NULL REFERENCES users ON DELETE NO ACTION ON UPDATE NO ACTION,
     type INT NOT NULL DEFAULT 0,
-
-    created_at TIMESTAMP DEFAULT (now() at time zone 'utc')
+    created_at TIMESTAMP DEFAULT utc_now()
 );
 
 
@@ -68,5 +71,16 @@ CREATE TABLE IF NOT EXISTS links (
     user_id TEXT REFERENCES users ON DELETE NO ACTION ON UPDATE NO ACTION,
     max_uses INT DEFAULT 0 NOT NULL,
     expires_at TIMESTAMP,
-    created_at TIMESTAMP DEFAULT (now() at time zone 'utc')
+    created_at TIMESTAMP DEFAULT utc_now()
+);
+
+
+CREATE TABLE IF NOT EXISTS relationships (
+    type INT NOT NULL,  -- 0: friend | 1: block
+    user_id TEXT NOT NULL REFERENCES users ON DELETE CASCADE,
+    recipient_id TEXT NOT NULL REFERENCES users ON DELETE CASCADE,
+
+    PRIMARY KEY (user_id, recipient_id),
+
+    created_at TIMESTAMP DEFAULT utc_now()
 );

@@ -15,14 +15,14 @@ class Tokens:
         self.link_length = link_length
 
         self.signer = itsdangerous.TimestampSigner(secret)
-        self.incrementer: int = 0
+        self.incrementor: int = 0
 
     def create_id(self) -> str:
-        self.incrementer += 1
+        self.incrementor += 1
         now = int(time.time() * 1000 - self.epoch)
 
         snowflake = now << 22
-        snowflake |= self.incrementer
+        snowflake |= self.incrementor
 
         return str(snowflake)
 

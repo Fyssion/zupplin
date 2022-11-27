@@ -22,6 +22,10 @@ class Accounts(RequestHandler, require_token=False):
     async def post(self):
         body = self.body
 
+        if '@' not in body['email']:
+            self.error((400, 'Invalid email provided.'))
+            return
+
         id = self.tokens.create_id()
         try:
             record = await self.database.create_account(

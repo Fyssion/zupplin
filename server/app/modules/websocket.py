@@ -15,20 +15,12 @@ if TYPE_CHECKING:
     from app.app import Application
 
 
-# websocket opcodes:
-# dispatch: dispatched events like new messages
-# heartbeat: periodically sent message to confirm connection is alive
-# heartbeat_ack: confirmation that heartbeat was recieved
-# identify: information sent about who is connecting
-# hello: initial info sent to the client that includes heartbeat interval
-
-
 class WebsocketOpcode(Enum):
-    DISPATCH = 0
-    HEARTBEAT = 1
-    HEARTBEAT_ACK = 2
-    IDENTIFY = 3
-    HELLO = 4
+    DISPATCH = 0       # dispatched events like new messages
+    HEARTBEAT = 1      # periodically sent message to confirm connection is alive
+    HEARTBEAT_ACK = 2  # confirmation that heartbeat was received
+    IDENTIFY = 3       # information sent about who is connecting
+    HELLO = 4          # initial info sent to the client that includes heartbeat interval
 
 
 class WebsocketError:
