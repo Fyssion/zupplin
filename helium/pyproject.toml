@@ -1,0 +1,91 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "helium"
+dynamic = ["version"]
+description = "The backend API and WS server for zupplin"
+readme = "README.md"
+authors = [
+  { name = "Fyssion", email = "fyssioncodes@gmail.com" },
+]
+license = "AGPL-3.0"
+requires-python = ">=3.11"
+dependencies = [
+  "argon2-cffi~=21.0",
+  "asyncpg~=0.27",
+  "click~=8.1",
+  "itsdangerous~=2.1",
+  "orjson~=3.8",
+  "rich~=13.0",
+  "tornado~=6.2",
+]
+
+[tool.hatch.envs.default.scripts]
+start = "python -m app"
+
+[tool.hatch.envs.test]
+dependencies = [
+    "coverage[toml]",
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov"
+]
+[tool.hatch.envs.test.scripts]
+test = "pytest"
+lint = "pyright"
+cov = "pytest --cov=app"
+
+[tool.hatch.envs.style]
+detached = true
+dependencies = [
+  "black",
+  "isort",
+]
+[tool.hatch.envs.style.scripts]
+check = [
+  "black --check --diff .",
+  "isort --check-only --diff .",
+]
+fmt = [
+  "isort .",
+  "black .",
+  "check",
+]
+
+[tool.hatch.version]
+path = "app/__init__.py"
+
+[tool.coverage.run]
+omit = [
+    "app/__main__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+]
+
+[tool.black]
+line-length = 100
+skip-string-normalization = true
+
+[tool.isort]
+profile = "black"
+combine_as_imports = true
+combine_star = true
+line_length = 100
+
+[tool.pyright]
+pythonPlatform = "Linux"
+venvPath = ".hatch/test"
+pythonVersion = "3.11"
+typeCheckingMode = "basic"
+useLibraryCodeForTypes = true
+reportUnnecessaryTypeIgnoreComment = "warning"
+reportUnusedImport = "error"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+filterwarnings = "ignore:There is no current event loop:DeprecationWarning"

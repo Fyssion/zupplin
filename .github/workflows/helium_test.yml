@@ -1,0 +1,54 @@
+name: "helium: test"
+
+on:
+  push:
+    paths:
+      - "helium/**"
+  pull_request:
+    types: [ opened, reopened, synchronize ]
+    paths:
+      - "helium/**"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./helium
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: pass
+          POSTGRES_DB: db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install hatch
+        run: |
+          pip install hatch
+          hatch config set dirs.env.virtual .hatch
+
+      - name: Install dependencies
+        run: hatch env create test
+
+      - name: Copy config
+        run: cp config.example.toml config.toml
+
+      - name: Run tests
+        run: hatch run test:test

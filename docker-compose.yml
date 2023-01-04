@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  # aero:
+  #   image: rust:slim
+  #   command: |
+  #     rustup target add wasm32-unknown-unknown \
+  #     && cargo install dioxus-cli \
+  #     && dioxus serve
+  #   ports:
+  #     - 3000:3000
+  #   working_dir: /app
+  #   volumes:
+  #     - ./aero:/app
+
+  heliumn:
+    image: python:3.11-slim-buster
+    command: sh -c "pip3 install hatch && hatch run start"
+    ports:
+      - 4000:4000
+    working_dir: /app
+    volumes:
+      - ./helium:/app
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15.1
+    volumes:
+      - data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+volumes:
+  data:

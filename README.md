@@ -1,15 +1,15 @@
 # zupplin
 
-Zupplin is a toy chat server made for fun.
+zupplin is a toy chat server made for fun.
 
 ## Codebases
 
 > Installation instructions are found in each codebases' README.
 
-| Codebase           | Description                      |
-|--------------------|----------------------------------|
-| [`server`](server) | Backend using Python and Tornado |
-| [`web`](web)       | Web frontend using React         |
+| Codebase           | Description                                 |
+|--------------------|---------------------------------------------|
+| [`helium`](helium) | Backend API server using Python and Tornado |
+| [`aero`](aero)     | Frontend client using Rust and Dioxus       |
 
 ## Why?
 

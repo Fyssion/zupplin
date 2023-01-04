@@ -1,4 +1,4 @@
-server:
-- server/*/**
-web:
-- web/*/**
+helium:
+- helium/*/**
+aero:
+- aero/*/**

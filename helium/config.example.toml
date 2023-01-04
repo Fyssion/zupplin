@@ -1,0 +1,20 @@
+[server]
+host = "localhost"
+port = 8888
+title = "zupplin"
+debug = false
+autoreload = false  # ignore this unless you are editing the source files
+
+[tokens]
+epoch = 1609459200
+secret = ""  # CHANGE THIS VALUE TO SOMETHING SECRET
+link_length=10  # the length of shortlinks
+
+[links]
+base_url = ""
+
+[database]
+uri = "postgresql://user:pass@localhost:5432/db"
+
+[client]
+url = "web.zupplin.org"
