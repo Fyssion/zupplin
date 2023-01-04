@@ -23,7 +23,7 @@ jobs:
         with:
           python-version: "3.10"
 
-       name: Install hatch
+      - name: Install hatch
         run: |
           pip install hatch
           hatch config set dirs.env.virtual .hatch

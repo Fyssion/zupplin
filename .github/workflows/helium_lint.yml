@@ -32,7 +32,13 @@ jobs:
         run: |
           hatch env create test
 
-      - name: Test with pyright
-        uses: jakebailey/pyright-action@v1
+      - name: Set up Node
+        uses: actions/setup-node@v3
         with:
-          working-directory: ./helium
+          node-version: 16
+
+      - name: Install pyright
+        run: npm i -g pyright
+
+      - name: Test with pyright
+        run: hatch run test:lint
