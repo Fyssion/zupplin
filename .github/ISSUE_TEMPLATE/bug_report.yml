@@ -2,8 +2,6 @@ name: Bug Report
 description: File a bug report
 title: "[Bug]: "
 labels: [unconfirmed bug]
-assignees:
-  - octocat
 body:
   - type: markdown
     attributes:
@@ -45,13 +43,13 @@ body:
     id: screenshots
     attributes:
       label: Screenshots/Videos
-      description: If applicable, please provide any relavent screenshots or videos that help explain your issue.
+      description: If applicable, please provide any relevant screenshots or videos that help explain your issue.
   - type: checkboxes
     id: checklist
     attributes:
       label: Checklist
       description: >
-        Let's make sure you've properly done due dilligence when reporting this issue!
+        Let's make sure you've properly done due diligence when reporting this issue!
       options:
         - label: I have searched the open issues for duplicates.
           required: true
