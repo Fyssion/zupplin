@@ -23,8 +23,14 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install hatch
+        run: |
+          pip install hatch
+          hatch config set dirs.env.virtual .hatch
+
       - name: Install dependencies
-        run: pip install ".[test]"
+        run: |
+          hatch env create test
 
       - name: Test with pyright
         uses: jakebailey/pyright-action@v1
