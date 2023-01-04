@@ -10,7 +10,7 @@ on:
       - "helium/**"
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     defaults:
       run:

@@ -61,5 +61,3 @@ Pyright is currently set to run on its basic mode.
 Use `hatch run style:check` to check your code style.
 To run Pyright locally, first install Pyright (via pip or npm) then run it with `hatch run test:lint`.
 
-test
-
