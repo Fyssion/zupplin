@@ -22,6 +22,15 @@ dependencies = [
   "tornado~=6.2",
 ]
 
+[tool.hatch.env]
+requires = [
+    "hatch-pip-compile"
+]
+
+[tool.hatch.envs.default]
+type = "pip-compile"
+pip-compile-constraint = "default"
+
 [tool.hatch.envs.default.scripts]
 start = "python -m app"
 
@@ -29,7 +38,7 @@ start = "python -m app"
 dependencies = [
     "coverage[toml]",
     "pytest",
-    "pytest-asyncio",
+    "pytest-asyncio==0.20",
     "pytest-cov"
 ]
 [tool.hatch.envs.test.scripts]
@@ -56,6 +65,9 @@ fmt = [
 
 [tool.hatch.version]
 path = "app/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
 
 [tool.coverage.run]
 omit = [
