@@ -40,7 +40,7 @@ jobs:
 
       # the pyright action doesn't like hatch's venv, and I'm too lazy to figure out why
       - name: Install pyright
-        run: npm i -g pyright
+        run: npm i -g pyright@1.1.274
 
       - name: Test with pyright
         run: hatch run test:lint
